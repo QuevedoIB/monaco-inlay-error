@@ -22,5 +22,9 @@ body {
 .css,
 .js {
   height: 400px;
-  width: 400px;
+}
+
+.monaco-editor {
+  width: 100%;
+  height: 100%;
 }

@@ -44,7 +44,7 @@ export async function createEditors(configs) {
     grammars.set("javascript", "source.js");
 
     const configureTheme = async () => {
-      monaco.editor.defineTheme("custom", { base: "vs" });
+      // monaco.editor.defineTheme("custom", { base: "vs" });
 
       await import(
         "monaco-editor/esm/vs/language/typescript/monaco.contribution"
