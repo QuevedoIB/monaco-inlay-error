@@ -1,0 +1,1 @@
+export * as solarized from "./solarized.json"
