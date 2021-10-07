@@ -44,13 +44,13 @@ export async function createEditors(configs) {
     grammars.set("javascript", "source.js");
 
     const configureTheme = async () => {
+      monaco.editor.defineTheme("custom", { base: "vs" });
+
       await import(
         "monaco-editor/esm/vs/language/typescript/monaco.contribution"
       );
       await import("monaco-editor/esm/vs/language/css/monaco.contribution");
       await import("monaco-editor/esm/vs/language/html/monaco.contribution");
-
-      monaco.editor.defineTheme("custom-theme", { base: "vs" });
     };
 
     await configureTheme();
@@ -62,6 +62,7 @@ export async function createEditors(configs) {
         const editor = monaco.editor.create(domElement, {
           value,
           language,
+          theme: "solarized",
         });
         editors[language] = editor;
         return await wireTmGrammars(monaco, registry, grammars, editor);
@@ -89,3 +90,47 @@ export async function createEditors(configs) {
     },
   ]);
 })();
+
+const convertTheme = (theme) => {
+  const returnTheme = {
+    inherit: false,
+    base: "vs-dark",
+    colors: theme.colors,
+    rules: [],
+    encodedTokensColors: [],
+  };
+  theme.tokenColors.forEach((color) => {
+    if (typeof color.scope === "string") {
+      const split = color.scope.split(",");
+      if (split.length > 1) {
+        color.scope = split;
+        evalAsArray();
+        return;
+      }
+      returnTheme.rules.push(
+        Object.assign({}, color.settings, {
+          // token: color.scope.replace(/\s/g, '')
+          token: color.scope,
+        })
+      );
+      return;
+    }
+    evalAsArray();
+    function evalAsArray() {
+      if (color.scope) {
+        color.scope.forEach((scope) => {
+          returnTheme.rules.push(
+            Object.assign({}, color.settings, {
+              token: scope,
+            })
+          );
+        });
+      }
+    }
+  });
+  returnTheme.rules.push({
+    token: "",
+    foreground: returnTheme.colors["editor.foreground"],
+  });
+  return returnTheme;
+};
