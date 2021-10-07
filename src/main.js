@@ -62,7 +62,7 @@ export async function createEditors(configs) {
         const editor = monaco.editor.create(domElement, {
           value,
           language,
-          theme: "solarized",
+          theme: "custom",
         });
         editors[language] = editor;
         return await wireTmGrammars(monaco, registry, grammars, editor);
